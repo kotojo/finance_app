@@ -1,38 +1,41 @@
 import React, { Component } from 'react'
 import './App.css'
 import MyHeader from './header/header.js'
-import PurchaseForm from './purchaseForm/purchaseForm.js'
-import PurchaseList from './purchaseList/purchaseList.js'
+import NavLink from './NavLink'
 const firebase = window.firebase
 
 class App extends Component {
   constructor (props) {
     super(props)
-    this.state = { purchases: {} }
-    this.addPurchase = this.addPurchase.bind(this)
-    firebase.database().ref('/purchases').on('value', snapshot => {
-      let purchases = snapshot.val()
-      this.setState({purchases})
+    const loggedIn = firebase.auth().currentUser != null
+    this.state = { loggedIn }
+  }
+
+  componentWillMount () {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setState({loggedIn: true})
+      } else {
+        this.setState({loggedIn: false})
+      }
     })
   }
 
-  addPurchase (cost, type) {
-    let purchaseRef = firebase.database().ref('/purchases/')
-    let newPurchase = purchaseRef.push()
-    newPurchase.set({cost, type})
-  }
-
   render () {
+    // todo: refactor two components
+    const landingScreen = this.state.loggedIn ? <p>You are already logged in. Go to dashboard?</p>
+      : (<p>You are not logged in. Please <NavLink to='login'>login</NavLink> or sign up.</p>)
     return (
       <div className='App'>
         <MyHeader />
-        <div>
-          <PurchaseForm addPurchase={this.addPurchase} />
-          <PurchaseList purchases={this.state.purchases} />
-        </div>
+        {this.props.children ? (this.props.children) : (landingScreen)}
       </div>
     )
   }
+}
+
+App.propTypes = {
+  children: React.PropTypes.node
 }
 
 export default App
