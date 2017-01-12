@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
 import MyHeader from './header/header.js'
-import NavLink from './NavLink'
 const firebase = window.firebase
 
 class App extends Component {
@@ -22,13 +21,16 @@ class App extends Component {
   }
 
   render () {
-    // todo: refactor two components
-    const landingScreen = this.state.loggedIn ? <p>You are already logged in. Go to <NavLink to='purchases'>dashboard</NavLink>?</p>
-      : (<p>You are not logged in. Please <NavLink to='login'>login</NavLink> or sign up.</p>)
+    const children = React.Children.map(this.props.children,
+      (child) => React.cloneElement(child, {
+        loggedIn: this.state.loggedIn
+      })
+    )
+    
     return (
       <div className='App'>
         <MyHeader />
-        {this.props.children ? (this.props.children) : (landingScreen)}
+        {children}
       </div>
     )
   }

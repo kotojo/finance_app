@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './header.css'
+import NavLink from '../NavLink'
 
 class MyHeader extends Component {
   render () {
@@ -7,7 +8,7 @@ class MyHeader extends Component {
       <header className='header'>
         <div>
           <h1>
-              Money Tracker
+            <NavLink className='menuLink' to='/'>Money Tracker</NavLink>
           </h1>
         </div>
       </header>

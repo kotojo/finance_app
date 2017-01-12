@@ -1,14 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Router, Route, browserHistory } from 'react-router'
+import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import App from './App'
+import Home from './Home'
 import Purchases from './purchases/purchases'
 import Login from './login/login'
 import './index.css'
 const firebase = window.firebase
+let authSubscription
 
 function requireAuth (nextState, replace, callback) {
-  firebase.auth().onAuthStateChanged(user => {
+  authSubscription = firebase.auth().onAuthStateChanged(user => {
     if (!user) {
       replace({
         pathname: '/login',
@@ -16,12 +18,14 @@ function requireAuth (nextState, replace, callback) {
       })
     }
     callback()
+    authSubscription()
   })
 }
 
 ReactDOM.render((
   <Router history={browserHistory}>
     <Route path='/' component={App}>
+      <IndexRoute component={Home} />
       <Route path='/purchases' component={Purchases} onEnter={requireAuth} />
       <Route path='/login' component={Login} />
     </Route>

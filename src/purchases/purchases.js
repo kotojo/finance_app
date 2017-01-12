@@ -8,10 +8,14 @@ class Purchases extends Component {
     super(props)
     this.state = { purchases: {} }
     this.addPurchase = this.addPurchase.bind(this)
-    firebase.database().ref('/purchases').on('value', snapshot => {
+    this.purchaseSubscription = firebase.database().ref('/purchases').on('value', snapshot => {
       let purchases = snapshot.val()
       this.setState({purchases})
     })
+  }
+  
+  componentWillUnmount () {
+    firebase.database().ref('/purchases').off('value', this.purchaseSubscription)
   }
 
   addPurchase (cost, type) {
