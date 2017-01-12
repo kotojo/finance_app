@@ -8,12 +8,13 @@ class PurchaseList extends Component {
     this.setActive = this.setActive.bind(this)
     this.handleCostChange = this.handleCostChange.bind(this)
     this.updatePurchase = this.updatePurchase.bind(this)
+    this.removePurchase = this.removePurchase.bind(this)
   }
 
   handleCostChange (event) {
     let regex = /^\d+(\.|,)\d{2}$/
     this.setState({ cost: event.target.value,
-    hasError: !regex.test(event.target.value) })
+      hasError: !regex.test(event.target.value) })
   }
 
   handleSelectChange (event) {
@@ -27,6 +28,16 @@ class PurchaseList extends Component {
     firebase.database().ref('/purchases/' + this.state.activePurchase).update(purchase)
     this.setState({ activePurchase: null, cost: null, type: null })
   }
+  
+    removePurchase (key) {
+      const purchase = firebase.database().ref(`/purchases/${key}`)
+      purchase.remove()
+        .then(() => {
+          console.log('Removed')
+        }, () => {
+          console.log('Error')
+        })
+    }
 
   setActive (key) {
     if (key === undefined) this.setState({ activePurchase: null, cost: null, type: null })
@@ -42,6 +53,7 @@ class PurchaseList extends Component {
           <li key={key}>
             <span>{this.props.purchases[key].type}: {this.props.purchases[key].cost}</span>
             <button onClick={() => this.setActive(key)}>Edit</button>
+            <button onClick={() => this.removePurchase(key)}>Delete</button>
           </li>
         )
       } else {
