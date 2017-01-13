@@ -30,7 +30,7 @@ class Register extends Component {
   }
 
   render () {
-    let errors = this.state.error ? <p>{this.state.error}</p> : ''
+    const errors = this.state.error ? <p>{this.state.error}</p> : ''
     return (
       <div>
         <h1>Register</h1>
