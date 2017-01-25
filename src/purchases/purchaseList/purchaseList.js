@@ -29,15 +29,15 @@ class PurchaseList extends Component {
     this.setState({ activePurchase: null, cost: null, type: null })
   }
   
-    removePurchase (key) {
-      const purchase = firebase.database().ref(`/purchases/${key}`)
-      purchase.remove()
-        .then(() => {
-          console.log('Removed')
-        }, () => {
-          console.log('Error')
-        })
-    }
+  removePurchase (key) {
+    const purchase = firebase.database().ref(`/purchases/${key}`)
+    purchase.remove()
+      .then(() => {
+        console.log('Removed')
+      }, () => {
+        console.log('Error')
+      })
+  }
 
   setActive (key) {
     if (key === undefined) this.setState({ activePurchase: null, cost: null, type: null })

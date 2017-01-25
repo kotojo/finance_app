@@ -29,7 +29,7 @@ class App extends Component {
     
     return (
       <div className='App'>
-        <MyHeader />
+        <MyHeader loggedIn={this.state.loggedIn} />
         {children}
       </div>
     )
