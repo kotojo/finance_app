@@ -60,7 +60,7 @@ class Login extends Component {
         <label htmlFor='password'>
           <input name='password' placeholder='password' type='password'
             value={this.state.password} onChange={this.handleChange} />
-        </label> (hint: password1)<br />
+        </label><br />
         <button type='submit'>login</button>
         {this.state.error && (<p>{this.state.errorMessage}</p>)}
       </form>

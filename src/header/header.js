@@ -16,15 +16,13 @@ class MyHeader extends Component {
   }
   
   render () {
-    let logoutLink = this.props.loggedIn ? (<a href='#' onClick={this.logout}>Logout</a>) : ''
+    let logoutLink = this.props.loggedIn ? (<a href='#' className='logout headerLink' onClick={this.logout}>Logout</a>) : ''
     return (
       <header className='header'>
-        <div>
-          <h1>
-            <NavLink className='menuLink' to='/'>Money Tracker</NavLink>
-            {logoutLink}
-          </h1>
-        </div>
+        <h1>
+          <NavLink className='headerLink' to='/'>Money Tracker</NavLink>
+          {logoutLink}
+        </h1>
       </header>
     )
   }

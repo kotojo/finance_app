@@ -1,5 +1,27 @@
 body {
   margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+  padding: 2em 1em;
+  font-family: "Helvetica", "Arial", sans-serif;
+  line-height: 1.5;
+  color: #333;
+}
+
+h2 {
+  margin-top: 1em;
+  padding-top: 1em;
+}
+
+h1,
+h2,
+strong {
+  color: #0a0a0a;
+}
+
+a {
+  color: #23c4eb;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }

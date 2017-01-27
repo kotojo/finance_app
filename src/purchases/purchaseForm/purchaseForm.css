@@ -1,29 +1,26 @@
-.purchaseContainer {
- height: 100%;
-}
-
-.purchaseCard {
- border: 1px solid #000;
- padding: 0;
-}
-
-.purchaseCardHeader {
- border-bottom: 1px solid #000;
-}
-
-.purchaseCardHeader h2 {
- margin: 0;
- padding: 10px 0;
-}
-
-.purchaseCardBody {
-
-}
-
 .costError {
  border: 1px solid #ff0000;
 }
 
 .costError:focus {
  outline-color: #ff0000;
+}
+
+.formGroup {
+  display: inline-block;
+}
+
+.formInput {
+  margin: 10px;
+}
+
+@media (max-width: 767px) {
+  .formGroup {
+    width: 90%;
+    display: block;
+  }
+
+  .formSubmit {
+    float: right;
+  }
 }
