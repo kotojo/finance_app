@@ -7,6 +7,12 @@
   color: #000;
 }
 
-.logout {
+.logoutLink {
   float: right;
+}
+
+@media (max-width: 767px) {
+  .header {
+    text-align: center;
+  }
 }

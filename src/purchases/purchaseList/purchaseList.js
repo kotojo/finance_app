@@ -9,6 +9,7 @@ class PurchaseList extends Component {
     this.handleCostChange = this.handleCostChange.bind(this)
     this.updatePurchase = this.updatePurchase.bind(this)
     this.removePurchase = this.removePurchase.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
   }
 
   handleCostChange (event) {

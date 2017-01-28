@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import './login-register.css'
 const firebase = window.firebase
 
 class Register extends Component {
@@ -33,15 +34,14 @@ class Register extends Component {
     const errors = this.state.error ? <p>{this.state.error}</p> : ''
     return (
       <div>
-        <h1>Register</h1>
         <form onSubmit={this.handleSubmit}>
-          <div>
+          <div className='formGroup'>
             <label htmlFor='email'> Email </label>
             <input name='email' placeholder='Email'
               value={this.state.email}
               onChange={this.handleChange} />
           </div>
-          <div>
+          <div className='formGroup'>
             <label htmlFor='password'>Password</label>
             <input name='password' type='password' placeholder='Password'
               value={this.state.password}
