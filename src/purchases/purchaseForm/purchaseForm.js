@@ -26,7 +26,7 @@ class PurchaseForm extends Component {
     let regex = /^\d+(\.|,)\d{2}$/
     if (!regex.test(this.state.cost)) return
     this.props.addPurchase(this.state.cost, this.state.type)
-    this.setState({ cost: '0.00', type: 'food' })
+    this.setState({ cost: '0.00' })
   }
 
   render () {

@@ -6,16 +6,19 @@ const firebase = window.firebase
 class App extends Component {
   constructor (props) {
     super(props)
-    const loggedIn = firebase.auth().currentUser != null
-    this.state = { loggedIn }
+    let userId = null
+    if (firebase.auth().currentUser != null) {
+      userId = firebase.auth().currentUser.uid
+    }
+    this.state = { userId }
   }
 
   componentWillMount () {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({loggedIn: true})
+        this.setState({userId: user.uid})
       } else {
-        this.setState({loggedIn: false})
+        this.setState({userId: null})
       }
     })
   }
@@ -23,13 +26,13 @@ class App extends Component {
   render () {
     const children = React.Children.map(this.props.children,
       (child) => React.cloneElement(child, {
-        loggedIn: this.state.loggedIn
+        userId: this.state.userId
       })
     )
-    
+
     return (
       <div className='App'>
-        <MyHeader loggedIn={this.state.loggedIn} />
+        <MyHeader userId={this.state.userId} />
         {children}
       </div>
     )

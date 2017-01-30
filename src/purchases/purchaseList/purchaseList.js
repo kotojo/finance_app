@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-const firebase = window.firebase
 
 class PurchaseList extends Component {
   constructor (props) {
@@ -7,8 +6,8 @@ class PurchaseList extends Component {
     this.state = { activePurchase: null, cost: null, type: null }
     this.setActive = this.setActive.bind(this)
     this.handleCostChange = this.handleCostChange.bind(this)
-    this.updatePurchase = this.updatePurchase.bind(this)
-    this.removePurchase = this.removePurchase.bind(this)
+    this.handleSelectChange = this.handleSelectChange.bind(this)
+    this.handlePurchaseUpdate = this.handlePurchaseUpdate.bind(this)
   }
 
   handleCostChange (event) {
@@ -21,22 +20,9 @@ class PurchaseList extends Component {
     this.setState({type: event.target.value})
   }
 
-  updatePurchase () {
-    let regex = /^\d+(\.|,)\d{2}$/
-    if (!regex.test(this.state.cost)) return
-    let purchase = {cost: this.state.cost, type: this.state.type}
-    firebase.database().ref('/purchases/' + this.state.activePurchase).update(purchase)
-    this.setState({ activePurchase: null, cost: null, type: null })
-  }
-  
-  removePurchase (key) {
-    const purchase = firebase.database().ref(`/purchases/${key}`)
-    purchase.remove()
-      .then(() => {
-        console.log('Removed')
-      }, () => {
-        console.log('Error')
-      })
+  handlePurchaseUpdate () {
+    this.props.updatePurchase(this.state.cost, this.state.type, this.state.activePurchase)
+    this.setState({activePurchase: null})
   }
 
   setActive (key) {
@@ -53,7 +39,7 @@ class PurchaseList extends Component {
           <li key={key}>
             <span>{this.props.purchases[key].type}: {this.props.purchases[key].cost}</span>
             <button onClick={() => this.setActive(key)}>Edit</button>
-            <button onClick={() => this.removePurchase(key)}>Delete</button>
+            <button onClick={() => this.props.removePurchase(key)}>Delete</button>
           </li>
         )
       } else {
@@ -68,7 +54,7 @@ class PurchaseList extends Component {
             </select>$
             <input onChange={this.handleCostChange} value={this.state.cost}
               type='text' name='purchaseCost' />
-            <button onClick={this.updatePurchase}>Save</button>
+            <button onClick={this.handlePurchaseUpdate}>Save</button>
             <button onClick={() => this.setActive()}>Cancel</button>
           </li>
         )
@@ -82,7 +68,9 @@ class PurchaseList extends Component {
 }
 
 PurchaseList.propTypes = {
-  purchases: React.PropTypes.object
+  purchases: React.PropTypes.object,
+  removePurchase: React.PropTypes.func,
+  updatePurchase: React.PropTypes.func
 }
 
 export default PurchaseList

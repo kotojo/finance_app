@@ -8,28 +8,31 @@ class MyHeader extends Component {
     super(props)
     this.logout = this.logout.bind(this)
   }
+
   logout () {
     firebase.auth().signOut()
       .then(() => {
         this.context.router.push('/')
       })
   }
-  
+
   render () {
-    let logoutLink = this.props.loggedIn ? (<a href='#' className='logout headerLink' onClick={this.logout}>Logout</a>) : ''
+    let logoutLink = this.props.userId ? (<a href='#' className='logoutLink headerLink' onClick={this.logout}>Logout</a>) : ''
     return (
-      <header className='header'>
-        <h1>
-          <NavLink className='headerLink' to='/'>Money Tracker</NavLink>
-          {logoutLink}
-        </h1>
-      </header>
+      <div>
+        <header className='header'>
+          <h1>
+            <NavLink className='headerLink' to='/'>Money Tracker</NavLink>
+            {logoutLink}
+          </h1>
+        </header>
+      </div>
     )
   }
 }
 
 MyHeader.propTypes = {
-  loggedIn: React.PropTypes.bool
+  userId: React.PropTypes.string
 }
 
 MyHeader.contextTypes = {
