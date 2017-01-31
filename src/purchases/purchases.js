@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PurchaseForm from './purchaseForm/purchaseForm'
 import PurchaseList from './purchaseList/purchaseList'
+import { BarChart } from 'react-d3'
+import './purchases.css'
 const firebase = window.firebase
 
 class Purchases extends Component {
@@ -18,6 +20,26 @@ class Purchases extends Component {
 
   componentWillUnmount () {
     firebase.database().ref(`${this.props.userId}/purchases/`).off('value', this.purchaseSubscription)
+  }
+
+  formatPurchaseData (purchases) {
+    const barData = [
+      {
+        'name': 'Series A',
+        'values': [
+          { 'x': 1, 'y': 91 },
+          { 'x': 2, 'y': 73 }
+        ]
+      },
+      {
+        'name': 'Series B',
+        'values': [
+          { 'x': 1, 'y': 13 },
+          { 'x': 2, 'y': 73 }
+        ]
+      }
+    ]
+    return barData
   }
 
   addPurchase (cost, type, date) {
@@ -44,11 +66,21 @@ class Purchases extends Component {
   }
 
   render () {
+    const graphData = this.formatPurchaseData(this.state.purchases)
     return (
       <div>
         <PurchaseForm addPurchase={this.addPurchase} />
-        <PurchaseList purchases={this.state.purchases} removePurchase={this.removePurchase}
-          updatePurchase={this.updatePurchase} />
+        <div className='flex-container'>
+          <PurchaseList purchases={this.state.purchases}
+            removePurchase={this.removePurchase} updatePurchase={this.updatePurchase} />
+          <BarChart
+            data={graphData}
+            fill={'#3182bd'}
+            title='Bar Chart'
+            yAxisLabel='Cost'
+            xAxisLabel='Date'
+          />
+        </div>
       </div>
     )
   }
