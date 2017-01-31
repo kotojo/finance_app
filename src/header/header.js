@@ -23,9 +23,11 @@ class MyHeader extends Component {
         <header className='header'>
           <h1>
             <NavLink className='headerLink' to='/'>Money Tracker</NavLink>
-            {logoutLink}
           </h1>
         </header>
+        <nav>
+          {logoutLink}
+        </nav>
       </div>
     )
   }
