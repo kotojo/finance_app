@@ -52,7 +52,7 @@ class Purchases extends Component {
         <div className='flex-container'>
           <PurchaseList purchases={this.state.purchases}
             removePurchase={this.removePurchase} updatePurchase={this.updatePurchase} />
-          <PurchaseChart />
+          <PurchaseChart purchases={this.state.purchases} />
         </div>
       </div>
     )
