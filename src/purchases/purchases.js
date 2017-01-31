@@ -11,7 +11,7 @@ class Purchases extends Component {
     this.removePurchase = this.removePurchase.bind(this)
     this.updatePurchase = this.updatePurchase.bind(this)
     this.purchaseSubscription = firebase.database().ref(`${this.props.userId}/purchases/`).on('value', snapshot => {
-      let purchases = snapshot.val() || {}
+      const purchases = snapshot.val() || {}
       this.setState({purchases})
     })
   }
@@ -20,10 +20,10 @@ class Purchases extends Component {
     firebase.database().ref(`${this.props.userId}/purchases/`).off('value', this.purchaseSubscription)
   }
 
-  addPurchase (cost, type) {
-    let purchaseRef = firebase.database().ref(`${this.props.userId}/purchases/`)
-    let newPurchase = purchaseRef.push()
-    newPurchase.set({cost, type})
+  addPurchase (cost, type, date) {
+    const purchaseRef = firebase.database().ref(`${this.props.userId}/purchases/`)
+    const newPurchase = purchaseRef.push()
+    newPurchase.set({cost, type, date})
   }
 
   removePurchase (key) {
@@ -36,10 +36,10 @@ class Purchases extends Component {
       })
   }
 
-  updatePurchase (cost, type, id) {
-    let regex = /^\d+(\.|,)\d{2}$/
+  updatePurchase (cost, type, date, id) {
+    const regex = /^\d+(\.|,)\d{2}$/
     if (!regex.test(cost)) return
-    let purchase = {cost, type}
+    const purchase = {cost, type}
     firebase.database().ref(`${this.props.userId}/purchases/${id}`).update(purchase)
   }
 
