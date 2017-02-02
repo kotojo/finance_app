@@ -1,42 +1,72 @@
 import React, { Component } from 'react'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import './purchaseChart.css'
-const data = [
-      {name: 'Sunday', Food: 4000, Gas: 2400, Bills: 2400, Entertainment: 3000},
-      {name: 'Monday', Food: 3000, Gas: 1398, Bills: 2210, Entertainment: 1450},
-      {name: 'Tuesday', Food: 2000, Gas: 9800, Bills: 2290, Entertainment: 1000},
-      {name: 'Wednesday', Food: 2780, Gas: 3908, Bills: 2000, Entertainment: 4500},
-      {name: 'Thursday', Food: 1890, Gas: 4800, Bills: 2181, Entertainment: 1200},
-      {name: 'Friday', Food: 2390, Gas: 3800, Bills: 2500, Entertainment: 2750},
-      {name: 'Saturday', Food: 2390, Gas: 3800, Bills: 2500, Entertainment: 2750}
-]
+
+const weekInMilliseconds = 604800000
 
 class PurchaseChart extends Component {
   constructor (props) {
     super(props)
     this.state = { range: 'days' }
     this.setRange = this.setRange.bind(this)
+    this.getDataByRange = this.getDataByRange.bind(this)
   }
 
   setRange (range) {
     this.setState({range})
   }
 
+  getDataByRange (purchases, range) {
+    const purchasesArray = Object.values(purchases)
+    const currentDate = (new Date(Date.now())).getTime()
+    return this.formatPurchases(purchasesArray.filter(purchase => {
+      if (range === 'days') {
+        return currentDate - (new Date(purchase.date)).getTime() < weekInMilliseconds
+      } else {
+        return true
+      }
+    }), range)
+  }
+
+  formatPurchases (purchases, range) {
+    const formattedPurchases = []
+    const purchaseIndexHash = {}
+    purchases.forEach((purchase) => {
+      if (range === 'days') {
+        const index = purchaseIndexHash[purchase.date]
+        if (index != null) {
+          formattedPurchases[index][purchase.type] = (formattedPurchases[index][purchase.type] || 0) + Number(purchase.cost)
+        } else {
+          const purchaseRow = { date: purchase.date }
+          purchaseRow[purchase.type] = Number(purchase.cost)
+          formattedPurchases.push(purchaseRow)
+          purchaseIndexHash[purchase.date] = formattedPurchases.length - 1
+        }
+      }
+    })
+    formattedPurchases.sort((a, b) => {
+      return (new Date(a.date)).getTime() - (new Date(b.date)).getTime()
+    })
+    return formattedPurchases
+  }
+
   render () {
+    const filteredPurchases = this.getDataByRange(this.props.purchases, this.state.range)
+
     return (
       <div>
         <ResponsiveContainer width='50%' height='80%' minHeight={300} minWidth={350}>
-          <BarChart data={data}
+          <BarChart data={filteredPurchases}
             margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-            <XAxis dataKey='name' />
+            <XAxis dataKey='date' />
             <YAxis />
             <CartesianGrid strokeDasharray='3 3' />
             <Tooltip formatter={(value) => `$${value}`} />
-            <Legend />
-            <Bar dataKey='Food' stackId='a' fill='#ffb3ba' />
-            <Bar dataKey='Gas' stackId='a' fill='#ffdfba' />
-            <Bar dataKey='Bills' stackId='a' fill='#baffc9' />
-            <Bar dataKey='Entertainment' stackId='a' fill='#bae1ff' />
+            <Legend style={{marginTop: '10px'}} />
+            <Bar dataKey='food' stackId='a' fill='#ffb3ba' />
+            <Bar dataKey='gas' stackId='a' fill='#ffdfba' />
+            <Bar dataKey='bills' stackId='a' fill='#baffc9' />
+            <Bar dataKey='entertainment' stackId='a' fill='#bae1ff' />
           </BarChart>
         </ResponsiveContainer>
         <div className='buttonContainer'>
