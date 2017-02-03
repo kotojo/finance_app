@@ -1,8 +1,8 @@
-.costError {
+.error {
  border: 1px solid #ff0000;
 }
 
-.costError:focus {
+.error:focus {
  outline-color: #ff0000;
 }
 

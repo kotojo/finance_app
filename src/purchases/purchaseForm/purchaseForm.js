@@ -2,35 +2,49 @@ import React, { Component } from 'react'
 import './purchaseForm.css'
 
 class PurchaseForm extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { cost: '0.00', type: 'food', hasError: false }
+  state = { cost: '0.00',
+    type: 'food',
+    date: '',
+    hasError: { cost: false, date: false } }
 
-    this.handleCostChange = this.handleCostChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  handleCostChange (event) {
+  handleCostChange = (event) => {
     let regex = /^\d+(\.|,)\d{2}$/
     this.setState({ cost: event.target.value,
-      hasError: !regex.test(event.target.value) })
+      hasError: { cost: !regex.test(event.target.value),
+        date: this.state.hasError.date }
+    })
   }
 
-  handleSelectChange (event) {
+  handleDateChange = (event) => {
+    const validDate = this.isValidDate(event.target.value)
+    this.setState({ date: event.target.value,
+      hasError: { date: !validDate,
+        cost: this.state.hasError.cost }
+    })
+  }
+
+  handleSelectChange = (event) => {
     this.setState({type: event.target.value})
   }
 
-  handleSubmit (event) {
+  handleSubmit = (event) => {
     event.preventDefault()
-    let regex = /^\d+(\.|,)\d{2}$/
-    if (!regex.test(this.state.cost)) return
-    this.props.addPurchase(this.state.cost, this.state.type)
+    const costRegex = /^\d+(\.|,)\d{2}$/
+    if (!costRegex.test(this.state.cost) || !this.isValidDate(this.state.date)) return
+    this.props.addPurchase(this.state.cost, this.state.type, this.state.date)
     this.setState({ cost: '0.00' })
   }
 
+  isValidDate (dateStr) {
+    if (dateStr == null) return false
+    const date = new Date(dateStr)
+    return date.getTime() > (new Date('1900-01-01')).getTime()
+  }
+
   render () {
-    let inputClasses = (this.state.hasError ? 'costError formInput' : 'formInput')
+    // todo: factor out inputs into own components... get repetitive
+    const dateClasses = (this.state.hasError.date ? 'error formInput' : 'formInput')
+    const costClasses = (this.state.hasError.cost ? 'error formInput' : 'formInput')
     return (
       <div>
         <h2>Add a purchase</h2>
@@ -47,9 +61,14 @@ class PurchaseForm extends Component {
               </select>
             </div>
             <div className='formGroup'>
-              <label htmlFor='purchaseCost'><strong>Cost: $</strong></label>
-              <input type='text' name='purchaseCost' className={inputClasses}
+              <label htmlFor='purchaseCost'><strong>Cost $</strong></label>
+              <input type='text' name='purchaseCost' className={costClasses}
                 value={this.state.cost} onChange={this.handleCostChange} />
+            </div>
+            <div className='formGroup'>
+              <label htmlFor='purchaseDate'><strong>Date </strong></label>
+              <input type='date' name='purchaseDate' className={dateClasses}
+                value={this.state.date} onChange={this.handleDateChange} />
             </div>
             <input type='submit' value='Submit' className='formSubmit' />
           </form>
