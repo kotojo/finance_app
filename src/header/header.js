@@ -4,12 +4,7 @@ import NavLink from '../NavLink'
 const firebase = window.firebase
 
 class MyHeader extends Component {
-  constructor (props) {
-    super(props)
-    this.logout = this.logout.bind(this)
-  }
-
-  logout () {
+  logout = () => {
     firebase.auth().signOut()
       .then(() => {
         this.context.router.push('/')

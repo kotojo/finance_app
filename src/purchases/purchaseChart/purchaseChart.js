@@ -5,18 +5,13 @@ import './purchaseChart.css'
 const weekInMilliseconds = 604800000
 
 class PurchaseChart extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { range: 'days' }
-    this.setRange = this.setRange.bind(this)
-    this.getDataByRange = this.getDataByRange.bind(this)
-  }
+  state = { range: 'days' }
 
-  setRange (range) {
+  setRange = (range) => {
     this.setState({range})
   }
 
-  getDataByRange (purchases, range) {
+  getDataByRange = (purchases, range) => {
     const purchasesArray = Object.values(purchases)
     const currentDate = (new Date(Date.now())).getTime()
     return this.formatPurchases(purchasesArray.filter(purchase => {
@@ -28,7 +23,7 @@ class PurchaseChart extends Component {
     }), range)
   }
 
-  formatPurchases (purchases, range) {
+  formatPurchases = (purchases, range) => {
     const formattedPurchases = []
     const purchaseIndexHash = {}
     purchases.forEach((purchase) => {

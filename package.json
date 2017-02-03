@@ -2,6 +2,18 @@
   "name": "finance",
   "version": "0.1.0",
   "private": true,
+  "standard": {
+    "parser": "babel-eslint",
+    "env": {
+      "node": true,
+      "browser": true,
+      "mocha": true,
+      "es6": true
+    },
+    "globals": [
+      "firebase"
+    ]
+  },
   "devDependencies": {
     "react-scripts": "0.7.0"
   },
@@ -13,13 +25,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "prebuild": "npm run lint",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "lint": "standard --fix --parser babel-eslint",
     "eject": "react-scripts eject"
-  },
-  "standard": {
-    "globals": [
-      "firebase"
-    ]
   }
 }

@@ -6,12 +6,10 @@ import './purchases.css'
 const firebase = window.firebase
 
 class Purchases extends Component {
+  state = { purchases: {} }
+
   constructor (props) {
     super(props)
-    this.state = { purchases: {} }
-    this.addPurchase = this.addPurchase.bind(this)
-    this.removePurchase = this.removePurchase.bind(this)
-    this.updatePurchase = this.updatePurchase.bind(this)
     this.purchaseSubscription = firebase.database().ref(`${this.props.userId}/purchases/`).on('value', snapshot => {
       const purchases = snapshot.val() || {}
       this.setState({purchases})

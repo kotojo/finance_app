@@ -2,26 +2,18 @@ import React, { Component } from 'react'
 import './purchaseList.css'
 
 class PurchaseList extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      activePurchase: null,
-      cost: null,
-      type: null,
-      date: '',
-      hasError: {
-        cost: false,
-        date: false
-      }
+  state = {
+    activePurchase: null,
+    cost: null,
+    type: null,
+    date: '',
+    hasError: {
+      cost: false,
+      date: false
     }
-    this.setActive = this.setActive.bind(this)
-    this.handleCostChange = this.handleCostChange.bind(this)
-    this.handleDateChange = this.handleDateChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.handlePurchaseUpdate = this.handlePurchaseUpdate.bind(this)
   }
 
-  handleCostChange (event) {
+  handleCostChange = (event) => {
     let regex = /^\d+(\.|,)\d{2}$/
     this.setState({ cost: event.target.value,
       hasError: {
@@ -31,12 +23,12 @@ class PurchaseList extends Component {
     })
   }
 
-  handleDateChange (event) {
+  handleDateChange = (event) => {
     const validDate = this.isValidDate(event.target.value)
     this.setState({ date: event.target.value,
       hasError: { date: !validDate,
         cost: this.state.hasError.cost }
-      })
+    })
   }
 
   isValidDate (dateStr) {
@@ -45,11 +37,11 @@ class PurchaseList extends Component {
     return date.getTime() > (new Date('1900-01-01')).getTime()
   }
 
-  handleSelectChange (event) {
+  handleSelectChange = (event) => {
     this.setState({type: event.target.value})
   }
 
-  handlePurchaseUpdate () {
+  handlePurchaseUpdate = () => {
     const { cost } = this.state.hasError
     const validDate = this.isValidDate(this.state.date)
     if (!validDate || cost) {
@@ -65,7 +57,7 @@ class PurchaseList extends Component {
     this.setState({activePurchase: null})
   }
 
-  setActive (key) {
+  setActive = (key) => {
     if (key === undefined) this.setState({ activePurchase: null, cost: null, type: null })
     else {
       this.setState({activePurchase: key,

@@ -3,19 +3,16 @@ import './login-register.css'
 const firebase = window.firebase
 
 class Login extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { error: false, errorMessage: '', email: '', password: '' }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-  handleChange (event) {
+  state = { error: false, errorMessage: '', email: '', password: '' }
+
+  handleChange = (event) => {
     const key = event.target.name
     let newState = {}
     newState[key] = event.target.value
     this.setState(newState)
   }
-  handleSubmit (event) {
+
+  handleSubmit = (event) => {
     event.preventDefault()
 
     const email = this.state.email

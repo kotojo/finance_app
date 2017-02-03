@@ -2,40 +2,32 @@ import React, { Component } from 'react'
 import './purchaseForm.css'
 
 class PurchaseForm extends Component {
-  constructor (props) {
-    super(props)
-    this.state = { cost: '0.00',
-      type: 'food',
-      date: '',
-      hasError: { cost: false, date: false } }
+  state = { cost: '0.00',
+    type: 'food',
+    date: '',
+    hasError: { cost: false, date: false } }
 
-    this.handleCostChange = this.handleCostChange.bind(this)
-    this.handleSelectChange = this.handleSelectChange.bind(this)
-    this.handleDateChange = this.handleDateChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  handleCostChange (event) {
+  handleCostChange = (event) => {
     let regex = /^\d+(\.|,)\d{2}$/
     this.setState({ cost: event.target.value,
       hasError: { cost: !regex.test(event.target.value),
         date: this.state.hasError.date }
-      })
+    })
   }
 
-  handleDateChange (event) {
+  handleDateChange = (event) => {
     const validDate = this.isValidDate(event.target.value)
     this.setState({ date: event.target.value,
       hasError: { date: !validDate,
         cost: this.state.hasError.cost }
-      })
+    })
   }
 
-  handleSelectChange (event) {
+  handleSelectChange = (event) => {
     this.setState({type: event.target.value})
   }
 
-  handleSubmit (event) {
+  handleSubmit = (event) => {
     event.preventDefault()
     const costRegex = /^\d+(\.|,)\d{2}$/
     if (!costRegex.test(this.state.cost) || !this.isValidDate(this.state.date)) return
