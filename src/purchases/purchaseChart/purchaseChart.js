@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import { VictoryBar, VictoryChart, VictoryAxis, VictoryTheme, VictoryStack } from 'victory'
 import './purchaseChart.css'
 
 const weekInMilliseconds = 604800000
@@ -24,46 +24,67 @@ class PurchaseChart extends Component {
   }
 
   formatPurchases = (purchases, range) => {
-    const formattedPurchases = []
-    const purchaseIndexHash = {}
+    const formattedData = {
+      'entertainment': [],
+      'food': [],
+      'bills': [],
+      'gas': []
+    }
     purchases.forEach((purchase) => {
       if (range === 'days') {
-        const index = purchaseIndexHash[purchase.date]
-        if (index != null) {
-          formattedPurchases[index][purchase.type] = (formattedPurchases[index][purchase.type] || 0) + Number(purchase.cost)
+        let row = formattedData[purchase.type].find(row => {
+          return row.date === purchase.date
+        })
+        if (row) {
+          row.cost += purchase.cost
         } else {
-          const purchaseRow = { date: purchase.date }
-          purchaseRow[purchase.type] = Number(purchase.cost)
-          formattedPurchases.push(purchaseRow)
-          purchaseIndexHash[purchase.date] = formattedPurchases.length - 1
+          row = { date: purchase.date, cost: Number(purchase.cost) }
+          formattedData[purchase.type].push(row)
         }
       }
     })
-    formattedPurchases.sort((a, b) => {
-      return (new Date(a.date)).getTime() - (new Date(b.date)).getTime()
+    for (let key of Object.keys(formattedData)) {
+      if (formattedData[key].length === 0) {
+        delete formattedData[key]
+      }
+    }
+    return formattedData
+  }
+
+  getDateValues = (purchases) => {
+    const purchaseDates = []
+    for (let key of Object.keys(purchases)) {
+      purchases[key].forEach(purchase => {
+        console.log(purchase)
+        if (purchaseDates.indexOf(purchase.date) === -1) {
+          purchaseDates.push(purchase.date)
+        }
+      })
+    }
+    purchaseDates.sort((a, b) => {
+      return (new Date(a)).getTime() - (new Date(b)).getTime()
     })
-    return formattedPurchases
+    return purchaseDates.map(purchase => {
+      return purchase.substr(5)
+    })
   }
 
   render () {
     const filteredPurchases = this.getDataByRange(this.props.purchases, this.state.range)
-
     return (
       <div>
-        <ResponsiveContainer width='50%' height='80%' minHeight={300} minWidth={350}>
-          <BarChart data={filteredPurchases}
-            margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-            <XAxis dataKey='date' />
-            <YAxis />
-            <CartesianGrid strokeDasharray='3 3' />
-            <Tooltip formatter={(value) => `$${value}`} />
-            <Legend style={{marginTop: '10px'}} />
-            <Bar dataKey='food' stackId='a' fill='#ffb3ba' />
-            <Bar dataKey='gas' stackId='a' fill='#ffdfba' />
-            <Bar dataKey='bills' stackId='a' fill='#baffc9' />
-            <Bar dataKey='entertainment' stackId='a' fill='#bae1ff' />
-          </BarChart>
-        </ResponsiveContainer>
+        <VictoryChart domainPadding={20}
+          theme={VictoryTheme.material} >
+          <VictoryAxis tickValues={this.getDateValues(filteredPurchases)} />
+          <VictoryAxis dependentAxis
+            tickFormat={(x) => (`$${x}`)} />
+          <VictoryStack>
+            {Object.keys(filteredPurchases).map(key => {
+              return <VictoryBar key={key}
+                data={filteredPurchases[key]} x='date' y='cost' />
+            })}
+          </VictoryStack>
+        </VictoryChart>
         <div className='buttonContainer'>
           <button onClick={() => { this.setRange('days') }}>Seven Days</button>
           <button onClick={() => { this.setRange('month') }}>Thirty Days</button>
