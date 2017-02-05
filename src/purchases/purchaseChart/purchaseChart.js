@@ -13,7 +13,7 @@ class PurchaseChart extends Component {
 
   getDataByRange = (purchases, range) => {
     const purchasesArray = Object.values(purchases)
-    const currentDate = (new Date(Date.now())).getTime()
+    const currentDate = (new Date()).getTime()
     return this.formatPurchases(purchasesArray.filter(purchase => {
       if (range === 'days') {
         return currentDate - (new Date(purchase.date)).getTime() < weekInMilliseconds
@@ -23,24 +23,31 @@ class PurchaseChart extends Component {
     }), range)
   }
 
+  getEmptyRows = (range) => {
+    const emptyRows = []
+    const currentDate = new Date()
+    if (range === 'days') {
+      for(let i = 0; i < 7; i++) {
+        const day = currentDate - 1000 * 60 * 60 * 24 * i
+        emptyRows.push({cost: 0, date: (new Date(day)).toISOString().substr(0, 10)})
+      }
+    }
+    return emptyRows
+  }
+
   formatPurchases = (purchases, range) => {
     const formattedData = {
-      'entertainment': [],
-      'food': [],
-      'bills': [],
-      'gas': []
+      'entertainment': this.getEmptyRows(range),
+      'food': this.getEmptyRows(range),
+      'bills': this.getEmptyRows(range),
+      'gas': this.getEmptyRows(range)
     }
     purchases.forEach((purchase) => {
       if (range === 'days') {
         let row = formattedData[purchase.type].find(row => {
           return row.date === purchase.date
         })
-        if (row) {
-          row.cost += purchase.cost
-        } else {
-          row = { date: purchase.date, cost: Number(purchase.cost) }
-          formattedData[purchase.type].push(row)
-        }
+        row.cost += Number(purchase.cost)
       }
     })
     for (let key of Object.keys(formattedData)) {
@@ -55,7 +62,6 @@ class PurchaseChart extends Component {
     const purchaseDates = []
     for (let key of Object.keys(purchases)) {
       purchases[key].forEach(purchase => {
-        console.log(purchase)
         if (purchaseDates.indexOf(purchase.date) === -1) {
           purchaseDates.push(purchase.date)
         }
@@ -64,18 +70,19 @@ class PurchaseChart extends Component {
     purchaseDates.sort((a, b) => {
       return (new Date(a)).getTime() - (new Date(b)).getTime()
     })
-    return purchaseDates.map(purchase => {
-      return purchase.substr(5)
-    })
+    return purchaseDates
   }
 
   render () {
     const filteredPurchases = this.getDataByRange(this.props.purchases, this.state.range)
+    const formattedDateValues = this.getDateValues(filteredPurchases).map(purchase => {
+      return purchase.substr(5)
+    })
     return (
       <div>
         <VictoryChart domainPadding={20}
           theme={VictoryTheme.material} >
-          <VictoryAxis tickValues={this.getDateValues(filteredPurchases)} />
+          <VictoryAxis tickValues={formattedDateValues} />
           <VictoryAxis dependentAxis
             tickFormat={(x) => (`$${x}`)} />
           <VictoryStack>
