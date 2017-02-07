@@ -6,7 +6,8 @@ import './purchaseChart.css'
 
 const timeInMilliseconds = {
   'week': 604800000,
-  'weeks': 2419200000
+  'weeks': 2419200000,
+  'year': 31556952000
 }
 
 class PurchaseChart extends Component {
@@ -37,6 +38,12 @@ class PurchaseChart extends Component {
         const day = currentDate - 1000 * 60 * 60 * 24 * i * 7
         emptyRows.push({cost: 0, date: (new Date(day)).toISOString().substr(0, 10)})
       }
+    } else if (range === 'year') {
+      const currentMonth = currentDate.getMonth()
+      for (let i = 0; i < 12; i++) {
+        const month = new Date(currentDate.getFullYear(), currentMonth - i, 1)
+        emptyRows.push({cost: 0, date: (new Date(month)).toISOString().substr(0, 10)})
+      }
     }
     return emptyRows
   }
@@ -49,20 +56,26 @@ class PurchaseChart extends Component {
       'gas': this.getEmptyRows(range)
     }
     purchases.forEach((purchase) => {
+      let row
       if (range === 'week') {
-        let row = formattedData[purchase.type].find(row => {
+        row = formattedData[purchase.type].find(row => {
           return row.date === purchase.date
         })
-        row.cost += Number(purchase.cost)
       } else if (range === 'weeks') {
-        let row = formattedData[purchase.type].find(row => {
+        row = formattedData[purchase.type].find(row => {
           const rowStartDate = new Date(row.date)
           const purchaseDate = new Date(purchase.date)
           return rowStartDate <= purchaseDate &&
             purchaseDate < rowStartDate.setDate(rowStartDate.getDate() + 7)
         })
-        row.cost += Number(purchase.cost)
+      } else if (range === 'year') {
+        row = formattedData[purchase.type].find(row => {
+          const rowMonth = row.date.split('-')[1]
+          const purchaseMonth = purchase.date.split('-')[1]
+          return rowMonth === purchaseMonth
+        })
       }
+      row.cost += Number(purchase.cost)
     })
     for (let key of Object.keys(formattedData)) {
       formattedData[key].sort((a, b) => {
@@ -90,7 +103,7 @@ class PurchaseChart extends Component {
   render () {
     const filteredPurchases = this.getDataByRange(this.props.purchases, this.state.range)
     const formattedDateValues = this.getDateValues(filteredPurchases).map(purchase => {
-      return purchase.substr(5)
+      return this.state.range === 'year' ? purchase.substr(5, 2) : purchase.substr(5)
     })
     const legendData = [
       {
@@ -101,7 +114,7 @@ class PurchaseChart extends Component {
         }
       },
       {
-        name: 'Foo',
+        name: 'Food',
         symbol: {
           type: 'square',
           fill: '#ffdfba'
