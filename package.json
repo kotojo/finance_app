@@ -10,11 +10,17 @@
       "mocha": true,
       "es6": true
     },
+    "ignore": [
+      "**/*.test.js",
+      "**/setupTests.js"
+    ],
     "globals": [
       "firebase"
     ]
   },
   "devDependencies": {
+    "enzyme": "^2.7.1",
+    "react-addons-test-utils": "^15.4.2",
     "react-scripts": "0.7.0",
     "standard": "latest"
   },
