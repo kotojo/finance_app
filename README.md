@@ -4,7 +4,7 @@ This is a personal project for making a [React.js](https://github.com/facebook/r
 ## Goals
 * Let users input their finances into the application and syncs real-time across all users that can view said finances
 * Have multiple users be able to share finance tracking as a family.
-* Have data visualization using [D3.js](https://d3js.org/) to view purchase history by category over weeks/months/years.
+* Have data visualization using [D3.js](https://d3js.org/) to view purchase history by category over days/weeks/months.
 
 ## Installation
 * This project was started using [Create React App](https://github.com/facebookincubator/create-react-app), so you will need to install that first.
