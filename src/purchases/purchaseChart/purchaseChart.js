@@ -136,8 +136,7 @@ class PurchaseChart extends Component {
       }]
     return (
       <div>
-        <VictoryChart domainPadding={20}
-          theme={VictoryTheme.material} >
+        <VictoryChart theme={VictoryTheme.material} >
           <VictoryAxis tickValues={formattedDateValues} />
           <VictoryAxis dependentAxis
             tickFormat={(x) => (`$${x}`)} />
@@ -159,8 +158,10 @@ class PurchaseChart extends Component {
                 x='date' y='cost' />
             })}
           </VictoryStack>
-          <VictoryLegend data={legendData}
-            orientation='horizontal' />
+          <svg>
+            <VictoryLegend data={legendData}
+              orientation='horizontal' padding={20} />
+          </svg>
         </VictoryChart>
         <div className='buttonContainer'>
           <button onClick={() => { this.setRange('week') }}>Seven Days</button>
