@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './header.css'
 import NavLink from '../NavLink'
-const firebase = window.firebase
+import { firebaseApp as firebase } from '../firebase'
 
 class MyHeader extends Component {
   logout = () => {

@@ -3,7 +3,7 @@ import PurchaseForm from './purchaseForm/purchaseForm'
 import PurchaseList from './purchaseList/purchaseList'
 import PurchaseChart from './purchaseChart/purchaseChart'
 import './purchases.css'
-const firebase = window.firebase
+import { firebaseApp as firebase } from '../firebase'
 
 class Purchases extends Component {
   state = { purchases: {} }

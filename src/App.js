@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import MyHeader from './header/header.js'
-const firebase = window.firebase
+import { firebaseApp as firebase } from './firebase'
 
 class App extends Component {
   constructor (props) {

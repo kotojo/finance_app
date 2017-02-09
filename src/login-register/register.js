@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './login-register.css'
-const firebase = window.firebase
+import { firebaseApp as firebase } from '../firebase'
 
 class Register extends Component {
   state = { error: '', email: '', password: '' }
