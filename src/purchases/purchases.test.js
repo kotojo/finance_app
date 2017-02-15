@@ -31,7 +31,7 @@ it('subscribes to purchases on initialization', () => {
   expect(subscribeFn).toHaveBeenCalledWith('value', callbackFn)
 })
 
-it('can add new purchases', () => {
+it('adds new purchases', () => {
   const setFn = jest.fn()
   firebase.database = jest.fn(() => {
     return { ref: jest.fn(() => {
@@ -49,4 +49,44 @@ it('can add new purchases', () => {
   const wrapper = shallow(<Purchases />)
   wrapper.instance().addPurchase(1.00, 'entertainment', '2017-01-01')
   expect(setFn).toHaveBeenCalledWith({cost: 1.00, type: 'entertainment', date: '2017-01-01'})
+})
+
+it('removes purchases', () => {
+  const refFn = jest.fn(() => {
+    return {
+      on: jest.fn(),
+      push: jest.fn(),
+      remove: rmFn,
+      update: jest.fn()
+    }
+  })
+  const rmFn = jest.fn(() => {
+    return new Promise((resolve) => resolve())
+  })
+  firebase.database = jest.fn(() => {
+    return { ref: refFn }
+  })
+  const wrapper = shallow(<Purchases userId='DarthVader' />)
+  wrapper.instance().removePurchase(12)
+  expect(refFn).toHaveBeenCalledWith('DarthVader/purchases/12')
+  expect(rmFn).toHaveBeenCalled()
+})
+
+it('updates purchases', () => {
+  const updateFn = jest.fn()
+  const refFn = jest.fn((a, b, c, d) => {
+    return {
+      on: jest.fn(),
+      push: jest.fn(),
+      remove: jest.fn(),
+      update: updateFn
+    }
+  })
+  firebase.database = jest.fn(() => {
+    return { ref: refFn }
+  })
+  const wrapper = shallow(<Purchases userId='DarthVader' />)
+  wrapper.instance().updatePurchase('12.00', 'entertainment', '2017/02/02', 3) 
+  expect(refFn).toHaveBeenCalledWith(`DarthVader/purchases/3`)
+  expect(updateFn).toHaveBeenCalledWith({ cost: '12.00', type: 'entertainment', date: '2017/02/02' })
 })

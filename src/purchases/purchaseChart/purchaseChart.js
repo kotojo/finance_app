@@ -164,9 +164,12 @@ class PurchaseChart extends Component {
           </svg>
         </VictoryChart>
         <div className='buttonContainer'>
-          <button onClick={() => { this.setRange('week') }}>Seven Days</button>
-          <button onClick={() => { this.setRange('weeks') }}>Four Weeks</button>
-          <button onClick={() => { this.setRange('year') }}>One Year</button>
+          <button className={this.state.range === 'week' ? 'activeRange' : ''}
+            onClick={this.setRange.bind(null, 'week')}>Seven Days</button>
+          <button className={this.state.range === 'weeks' ? 'activeRange' : ''}
+            onClick={this.setRange.bind(null, 'weeks')}>Four Weeks</button>
+          <button className={this.state.range === 'year' ? 'activeRange' : ''}
+            onClick={this.setRange.bind(null, 'year')}>One Year</button>
         </div>
       </div>
     )

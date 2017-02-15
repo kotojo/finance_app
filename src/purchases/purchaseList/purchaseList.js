@@ -100,7 +100,7 @@ class PurchaseList extends Component {
     })
 
     return (
-      <ul>{purchases}</ul>
+      <ul className='list'>{purchases}</ul>
     )
   }
 }
