@@ -7,7 +7,7 @@ This is a personal project for making a [React.js](https://github.com/facebook/r
 * Have data visualization to view purchase history by category over days/weeks/months.
 
 ## Installation
-* This project was started using [Create React App](https://github.com/facebookincubator/create-react-app), so you will need to install that first.
+* This project was started using [Create React App](https://github.com/facebookincubator/create-react-app)
 `npm install -g create-react-app`
 * Clone the repo `git clone https://github.com/kotojo/finance_app.git`
 * Install Dependencies `npm install`
