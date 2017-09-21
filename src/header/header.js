@@ -4,6 +4,15 @@ import NavLink from '../NavLink'
 import { firebaseApp as firebase } from '../firebase'
 
 class MyHeader extends Component {
+  
+  static propTypes = {
+    userId: React.PropTypes.string
+  }
+
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  }
+
   logout = () => {
     firebase.auth().signOut()
       .then(() => {
@@ -26,14 +35,6 @@ class MyHeader extends Component {
       </div>
     )
   }
-}
-
-MyHeader.propTypes = {
-  userId: React.PropTypes.string
-}
-
-MyHeader.contextTypes = {
-  router: React.PropTypes.object.isRequired
 }
 
 export default MyHeader
