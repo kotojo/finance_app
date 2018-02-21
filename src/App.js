@@ -6,10 +6,7 @@ import { firebaseApp as firebase } from './firebase'
 class App extends Component {
   constructor (props) {
     super(props)
-    let userId = null
-    if (firebase.auth().currentUser != null) {
-      userId = firebase.auth().currentUser.uid
-    }
+    const {currentUser: {uid: userId = null} = {}} = firebase.auth();
     this.state = { userId }
   }
 
