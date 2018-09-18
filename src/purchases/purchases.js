@@ -8,11 +8,10 @@ import { firebaseApp as firebase } from '../firebase'
 class Purchases extends Component {
   state = { purchases: {} }
 
-  constructor (props) {
-    super(props)
-    this.purchaseSubscription = firebase.database().ref(`${this.props.userId}/purchases/`).on('value', snapshot => {
-      const purchases = snapshot.val() || {}
-      this.setState({purchases})
+  componentDidMount() {
+      this.purchaseSubscription = firebase.database().ref(`${this.props.userId}/purchases/`).on('value', snapshot => {
+        const purchases = snapshot.val() || {}
+        this.setState({purchases})
     })
   }
 
